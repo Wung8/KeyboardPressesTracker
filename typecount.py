@@ -44,6 +44,10 @@ def update_number():
 def on_press(key):
     update_number()
 
+def on_click(x, y, button, pressed):
+    if pressed:
+        update_number()
+
 def on_move(x, y):
     x_position = root.winfo_x()
     y_position = root.winfo_y()
@@ -60,7 +64,7 @@ keyboard_listener = keyboard.Listener(on_press=on_press)
 keyboard_listener.start()
 
 # Set up the global mouse listener
-mouse_listener = mouse.Listener(on_move=on_move)
+mouse_listener = mouse.Listener(on_click=on_click, on_move=on_move)
 mouse_listener.start()
 
 # Run the Tkinter event loop
