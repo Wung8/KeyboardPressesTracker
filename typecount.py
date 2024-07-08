@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 from pynput import keyboard, mouse
 import screeninfo
 
@@ -16,33 +17,38 @@ screen = screeninfo.get_monitors()[0]
 screen_width = screen.width
 screen_height = screen.height
 
-# Window dimensions
-window_width = 200
-window_height = 100
-
-# Calculate position to center window at the top of the screen
-x_position = (screen_width - window_width) // 2
-y_position = 0
-
-# Set window geometry
-root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
-
 # Initial number
 number = 0
 
 # Create a label to display the number with white text
-label = tk.Label(root, text=str(number), font=("Helvetica", 48), fg="white", bg="black")
+label = tk.Label(root, text=str(number), font=("Helvetica", 28), fg="white", bg="black")
 label.pack(expand=True)
+
+# Measure the width of the text and adjust window size accordingly
+def adjust_window_size():
+    text_width = font.Font(font=("Helvetica", 28)).measure(str(number))
+    window_width = max(text_width + 20, 200)  # Add some padding
+    window_height = 50
+    x_position = (screen_width - window_width) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+0")
+
+# Initial adjustment of window size
+adjust_window_size()
 
 def update_number():
     global number
     number += 1  # Increment the number
     label.config(text=str(number))  # Update the label with the new number
+    adjust_window_size()  # Adjust window size based on new number
 
 def on_press(key):
     update_number()
 
 def on_move(x, y):
+    x_position = root.winfo_x()
+    y_position = root.winfo_y()
+    window_width = root.winfo_width()
+    window_height = root.winfo_height()
     # Check if the cursor is within the window's area
     if x_position <= x <= x_position + window_width and y_position <= y <= y_position + window_height:
         root.withdraw()  # Hide the window
