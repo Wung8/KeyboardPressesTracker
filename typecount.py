@@ -41,8 +41,16 @@ def update_number():
     label.config(text=str(number))  # Update the label with the new number
     adjust_window_size()  # Adjust window size based on new number
 
-def on_press(key):
-    update_number()
+pressed_keys = set()
+
+def on_key_press(key):
+    if key not in pressed_keys:
+        pressed_keys.add(key)
+        update_number()
+
+def on_key_release(key):
+    if key in pressed_keys:
+        pressed_keys.remove(key)
 
 def on_click(x, y, button, pressed):
     if pressed:
@@ -60,7 +68,7 @@ def on_move(x, y):
         root.deiconify()  # Show the window
 
 # Set up the global key listener
-keyboard_listener = keyboard.Listener(on_press=on_press)
+keyboard_listener = keyboard.Listener(on_press=on_key_press, on_release=on_key_release)
 keyboard_listener.start()
 
 # Set up the global mouse listener
