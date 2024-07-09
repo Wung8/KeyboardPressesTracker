@@ -3,6 +3,24 @@ from tkinter import font
 from pynput import keyboard, mouse
 import screeninfo
 
+file = 'number.txt'
+
+# Load the number from the file
+def load_number():
+    try:
+        with open(file, "r") as f:
+            return int(f.read())
+    except:
+        return 0
+
+# Save the number to the file
+def save_number(number):
+    with open(file, "w") as f:
+        f.write(str(number))
+
+# Initial number
+number = load_number()
+
 # Create the main window
 root = tk.Tk()
 root.title("Number Display")
@@ -16,9 +34,6 @@ root.config(bg="black")
 screen = screeninfo.get_monitors()[0]
 screen_width = screen.width
 screen_height = screen.height
-
-# Initial number
-number = 0
 
 # Create a label to display the number with white text
 label = tk.Label(root, text=str(number), font=("Helvetica", 28), fg="white", bg="black")
@@ -40,6 +55,7 @@ def update_number():
     number += 1  # Increment the number
     label.config(text=str(number))  # Update the label with the new number
     adjust_window_size()  # Adjust window size based on new number
+    save_number(number)  # Save the updated number to the file
 
 pressed_keys = set()
 
